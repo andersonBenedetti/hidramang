@@ -2,20 +2,37 @@
 // Template Name: Home
 ?>
 
-<?php get_header(); ?>
-
 <?php
-function gabriella_show_products($args = [])
-{
-    $products_query = wc_get_products($args);
-    if (empty($products_query)) {
-        echo '<p>Nenhum produto encontrado.</p>';
-        return;
-    }
-    $products_formatted = format_products($products_query);
-    gabriella_product_list($products_formatted);
-}
+$diferenciais = [
+    [
+        'icon' => 'streamline-flex_customer-support-5.svg',
+        'title' => 'Atendimento técnico eficiente',
+        'desc' => 'Suporte especializado para resolver rápido as demandas da sua empresa, com orientação prática e precisa.',
+    ],
+    [
+        'icon' => 'guidance_fire-hose.svg',
+        'title' => 'Rastreabilidade Inteligente',
+        'desc' => 'Cada mangueira possui número de lote gravado a laser, permitindo controle total, reposição imediata e precisa, sem desmontar o equipamento.',
+    ],
+    [
+        'icon' => 'clarity_process-on-vm-line.svg',
+        'title' => 'Processos organizados',
+        'desc' => 'Fluxo de trabalho estruturado que garante agilidade e padronização em todos os atendimentos.',
+    ],
+    [
+        'icon' => 'clarity_blocks-group-line.svg',
+        'title' => 'Amplo estoque',
+        'desc' => 'Variedade de mangueiras, conexões e acessórios sempre disponíveis para atender sua necessidade imediata.',
+    ],
+    [
+        'icon' => 'material-symbols-light_precision-manufacturing-outline-rounded.svg',
+        'title' => 'Equipamentos de ponta',
+        'desc' => 'Tecnologia moderna que assegura alto desempenho e precisão em todas as soluções.',
+    ],
+];
 ?>
+
+<?php get_header(); ?>
 
 <main id="pg-home" role="main">
     <section class="main-carousel swiper" aria-label="Carrossel de destaque">
@@ -55,52 +72,99 @@ function gabriella_show_products($args = [])
                 <p><?php _e('Desculpe, nenhum slide encontrado.', 'textdomain'); ?></p>
             <?php endif; ?>
         </div>
-        <div class="swiper-buttons">
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </section>
+
+    <section class="section-infos">
+        <div class="infos-top">
+            <p class="subtitle">Nossos diferenciais</p>
+            <h2 class="title-section">O padrão Hidramang em cada conexão</h2>
+        </div>
+
+        <div class="swiper carousel-infos" aria-label="Carrossel de diferenciais">
+            <div class="swiper-wrapper">
+                <?php foreach ($diferenciais as $dif): ?>
+                    <div class="swiper-slide">
+                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/icons/<?php echo esc_attr($dif['icon']); ?>"
+                            alt="<?php echo esc_attr($dif['title']); ?>" loading="lazy" width="22" height="22">
+                        <h3><?php echo esc_html($dif['title']); ?></h3>
+                        <p><?php echo esc_html($dif['desc']); ?></p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="swiper-btns">
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
         </div>
     </section>
 
-    <section class="section-categories">
-        <div class="container">
-            <div class="categories-top">
-                <div>
-                    <p class="subtitle">Coleções</p>
-                    <h2 class="title-section">Transforme espaços com experiências únicas.</h2>
-                </div>
-
-                <a class="btn" href="#">
-                    <span>conheça todas</span>
-                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/icons/arrow-btn.svg" alt="icone arrow"
-                        width="9" height="9">
-                </a>
+    <section class="section-products container">
+        <div class="products-top">
+            <div>
+                <p class="subtitle">Produtos</p>
+                <h2 class="title-section">Linha completa de componentes para condução de fluídos</h2>
             </div>
+
+            <a class="btn tertiary" href="#">
+                <span>Solicite um orçamento</span>
+            </a>
+        </div>
+        <div class="products-list">
+            <?php
+            $args_produtos = array(
+                'post_type' => 'produtos',
+                'post_status' => 'publish',
+                'posts_per_page' => -1,
+                'order' => 'DESC',
+            );
+
+            $loop_produtos = new WP_Query($args_produtos);
+
+            if ($loop_produtos->have_posts()): ?>
+                <div class="grid-products">
+                    <?php while ($loop_produtos->have_posts()):
+                        $loop_produtos->the_post();
+
+                        $imagem_produto = get_field('imagem_do_produto');
+                        $descricao_produto = get_field('descricao_do_produto');
+                        $titulo = get_the_title();
+                        ?>
+                        <article class="product-card" data-title="<?php echo esc_attr($titulo); ?>"
+                            data-desc="<?php echo wp_kses_post($descricao_produto); ?>"
+                            data-img="<?php echo esc_url($imagem_produto['url']); ?>" tabindex="0" role="button"
+                            aria-label="Ver detalhes de <?php echo esc_attr($titulo); ?>">
+                            <?php if ($imagem_produto): ?>
+                                <img src="<?php echo esc_url($imagem_produto['url']); ?>"
+                                    alt="<?php echo esc_attr($imagem_produto['alt'] ?: $titulo); ?>" loading="lazy" width="300"
+                                    height="300">
+                            <?php endif; ?>
+
+                            <h3><?php echo esc_html($titulo); ?></h3>
+                        </article>
+                    <?php endwhile; ?>
+                </div>
+                <?php wp_reset_postdata(); ?>
+            <?php else: ?>
+                <p><?php _e('Nenhum produto encontrado no momento.', 'textdomain'); ?></p>
+            <?php endif; ?>
         </div>
 
-        <div class="cat-carousel-wrapper">
-            <div class="cat-carousel swiper">
-                <div class="swiper-wrapper">
-                    <?php
-                    $product_categories = get_terms([
-                        'taxonomy' => 'product_cat',
-                        'hide_empty' => false,
-                    ]);
-
-                    if (!empty($product_categories) && !is_wp_error($product_categories)):
-                        foreach ($product_categories as $category):
-                            $thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
-                            $image_url = wp_get_attachment_url($thumbnail_id);
-                            $image_url = $image_url ? $image_url : get_stylesheet_directory_uri() . '/img/default-category.webp';
-                            ?>
-                            <a class="swiper-slide" href="<?php echo get_term_link($category); ?>"
-                                aria-label="<?php echo esc_attr($category->name); ?>">
-                                <img class="img-slide" src="<?php echo esc_url($image_url); ?>"
-                                    alt="<?php echo esc_attr($category->name); ?>" loading="lazy" width="400" height="400">
-                            </a>
-                            <?php
-                        endforeach;
-                    endif;
-                    ?>
+        <div id="product-popup" class="product-popup" aria-hidden="true">
+            <div class="popup-overlay"></div>
+            <div class="popup-content">
+                <button class="close-popup" aria-label="Fechar popup">&times;</button>
+                <img id="popup-img" src="" alt="" loading="lazy">
+                <div class="popup-infos">
+                    <h3 id="popup-title"></h3>
+                    <div id="popup-desc"></div>
+                    <a id="popup-whats" class="btn tertiary" href="#" target="_blank" rel="noopener">
+                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/icons/ic_outline-whatsapp-white.svg"
+                            alt="WhatsApp" loading="lazy" width="18" height="18">
+                        <span>Solicite um orçamento</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -109,172 +173,67 @@ function gabriella_show_products($args = [])
     <section class="section-about">
         <div class="container">
             <div class="about-top">
-                <div class="about-left">
-                    <p class="subtitle">Sobre nós</p>
-                    <h2 class="title-section">Muito além do revestimento</h2>
-                    <a class="btn secondary" href="#">
-                        <span>conheça</span>
+                <p class="subtitle">Sobre nós</p>
+                <h2 class="title-section">Referência em mangueiras hidráulicas, industriais, conexões e vedações.</h2>
+            </div>
+
+            <div class="about-main">
+                <div class="about-img">
+                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/img/sobre-nos.webp"
+                        alt="Hidramang - Sobre nós" loading="lazy" width="543" height="387">
+                </div>
+
+                <div class="about-text">
+                    <p>A Hidramang 85 é uma empresa especializada em componentes e foi criada em 2021, por profissionais
+                        com mais de 40 anos de experiência no ramo de atuação. Estamos situados em Içara-SC em um ponto
+                        estratégico para a logística de nossos produtos para todo o Brasil.</p>
+
+                    <p>Somos especialistas no fornecimento de componentes essenciais para a condução de fluidos. Com
+                        agilidade, oferecemos um vasto catálogo de <strong>mangueiras, vedações, conexões, adaptadores,
+                            filtros
+                            e acessórios</strong>, combinando a velocidade de um estoque estratégico com entrega
+                        imediata, com a
+                        flexibilidade de um fornecimento sob demanda.</p>
+
+                    <p>Fazemos mais do que apenas fornecer produtos, buscamos continuamente pela excelência, trabalhando
+                        com comprometimento e respeito com todos os envolvidos em nossos processos, clientes,
+                        colaboradores, fornecedores e a sociedade em que vivemos.</p>
+                    <a class="btn secondary" href="https://wa.me/554888660366" target="_blank" rel="noopener"
+                        aria-label="Chamar no WhatsApp">
+                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/icons/ic_outline-whatsapp.svg"
+                            alt="WhatsApp" loading="lazy" width="18" height="18">
+                        <span>Fale conosco</span>
                     </a>
                 </div>
-
-                <div class="about-right">
-                    <p>A Sense surge com espírito inovador e atual, desenvolvendo produtos que vão além das expectativas
-                        e necessidades de nossos clientes.</p>
-                    <p>Com um olhar para o futuro, a Sense busca incessante e incansavelmente desenvolver através de
-                        pesquisas em Tecnologia e Design, seus produtos com altíssimo nível, aliando modernidade e
-                        exclusividade.</p>
-                </div>
-            </div>
-
-            <div class="about-img">
-                <img src="<?php echo get_stylesheet_directory_uri(); ?>/img/sobre-nos.webp" alt="Sobre nós" width="1200"
-                    height="421">
-            </div>
-
-            <div class="about-counter">
-                <div class="story-counter">
-                    <p>+ DE</p>
-                    <p class="counter" data-target="5">0</p>
-                    <p class="text">Anos de atuação</p>
-                </div>
-
-                <div class="story-counter">
-                    <p>+ DE</p>
-                    <p class="counter" data-target="13">0</p>
-                    <p class="text">Coleções ativas</p>
-                </div>
-
-                <div class="story-counter">
-                    <p>+ DE</p>
-                    <p class="counter" data-target="500">0</p>
-                    <p class="text">clientes</p>
-                </div>
-
-                <div class="story-counter">
-                    <p>+ DE</p>
-                    <p class="counter" data-target="106">0</p>
-                    <p class="text">modelos</p>
-                </div>
             </div>
         </div>
     </section>
 
-    <section class="section-gallery container">
+    <section class="section-contact container">
         <div>
-            <p class="subtitle">inspire-se</p>
-            <h2 class="title-section">Explore combinações e criações</h2>
-            <div class="gallery-content">
-                <div class="img">
-                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/img/inspire-se-1.webp" alt="foto"
-                        width="588" height="429">
-                </div>
-                <div class="img">
-                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/img/inspire-se-2.webp" alt="foto"
-                        width="588" height="429">
-                </div>
+            <img src="<?php echo get_stylesheet_directory_uri(); ?>/icons/streamline-ultimate_headphones-customer-support-question.svg"
+                alt="Fone de ouvido" loading="lazy" width="76" height="76">
+
+            <div>
+                <p class="subtitle">Dúvidas, sugestões, elogios e/ou reclamações? </p>
+                <h2 class="title-section">Envie sua mensagem</h2>
             </div>
         </div>
 
-        <div class="gallery-content">
-            <div class="img">
-                <img src="<?php echo get_stylesheet_directory_uri(); ?>/img/inspire-se-3.webp" alt="foto" width="588"
-                    height="429">
-            </div>
-            <div class="img">
-                <img src="<?php echo get_stylesheet_directory_uri(); ?>/img/inspire-se-4.webp" alt="foto" width="588"
-                    height="429">
-            </div>
-        </div>
-    </section>
-
-    <section class="section-find container">
-        <div>
-            <p class="subtitle">onde encontrar</p>
-            <h2 class="title-section">Encontre peças Sense mais perto de você !</h2>
-        </div>
-
-        <a class="btn secondary" href="#">
-            <span>conheça todas</span>
-            <img src="<?php echo get_stylesheet_directory_uri(); ?>/icons/arrow-btn.svg" alt="icone arrow" width="9"
-                height="9">
+        <a class="btn secondary" href="#" aria-label="Abrir formulário de contato">
+            <img src="<?php echo get_stylesheet_directory_uri(); ?>/icons/hugeicons_sent-02.svg" alt="Ícone de envio"
+                loading="lazy" width="18" height="18">
+            <span>Enviar mensagem</span>
         </a>
-    </section>
 
-    <section class="section-blog container">
-        <div class="blog-top">
-            <div>
-                <p class="subtitle">Blog</p>
-                <h2 class="title-section">Novidades, inspirações e tudo o que move o universo da cerâmica</h2>
+        <div id="contact-popup" class="product-popup" aria-hidden="true">
+            <div class="popup-overlay"></div>
+            <div class="popup-content">
+                <button class="close-popup" aria-label="Fechar popup">&times;</button>
+                <div class="popup-infos">
+                    <?php echo do_shortcode('[contact-form-7 id="02a01cb" title="Formulário de Entre em contato"]'); ?>
+                </div>
             </div>
-
-            <a class="btn" href="#">
-                <span>Ler todas</span>
-                <img src="<?php echo get_stylesheet_directory_uri(); ?>/icons/arrow-btn.svg" alt="icone arrow" width="9"
-                    height="9">
-            </a>
-        </div>
-
-        <?php
-        $args = array(
-            'post_type' => 'post',
-            'posts_per_page' => 2,
-        );
-        $loop = new WP_Query($args);
-
-        if ($loop->have_posts()):
-            echo '<div class="blog-cards">';
-            while ($loop->have_posts()):
-                $loop->the_post(); ?>
-                <a href="<?php the_permalink(); ?>" class="blog-card">
-                    <?php if (has_post_thumbnail()): ?>
-                        <div class="blog-card-img">
-                            <?php the_post_thumbnail('medium'); ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <div class="blog-card-infos">
-                        <div class="blog-card-top">
-                            <?php
-                            $categories = get_the_category();
-                            if ($categories): ?>
-                                <span class="blog-card-category"><?php echo esc_html($categories[0]->name); ?></span>
-                            <?php endif; ?>
-
-                            <?php if (get_field('data_do_post')): ?>
-                                <span class="blog-card-date"><?php the_field('data_do_post'); ?></span>
-                            <?php endif; ?>
-                        </div>
-
-                        <h3 class="blog-card-title"><?php the_title(); ?></h3>
-
-                        <?php if (get_field('descricao_do_post')): ?>
-                            <p class="blog-card-description"><?php the_field('descricao_do_post'); ?></p>
-                        <?php endif; ?>
-
-                        <p class="blog-card-btn">
-                            <span>Leia mais</span>
-                        </p>
-                    </div>
-                </a>
-            <?php endwhile;
-            echo '</div>';
-            wp_reset_postdata();
-        endif;
-        ?>
-    </section>
-
-    <section class="section-social container">
-        <div class="blog-top">
-            <div>
-                <p class="subtitle">instagram</p>
-                <h2 class="title-section">@sensedecordesign</h2>
-            </div>
-
-            <a class="btn" href="#">
-                <span>Seguir</span>
-                <img src="<?php echo get_stylesheet_directory_uri(); ?>/icons/arrow-btn.svg" alt="icone arrow" width="9"
-                    height="9">
-            </a>
         </div>
     </section>
 </main>

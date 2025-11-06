@@ -92,12 +92,10 @@
 <script src="<?php echo get_template_directory_uri(); ?>/js/swiper-bundle.min.js"></script>
 <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/slider.js"></script>
 <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/main.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/popup.js"></script>
+<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/popup-products.js"></script>
+<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/popup-contact.js"></script>
 <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/toggle.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/quantity.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/counter-story.js"></script>
 <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/success-form.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/summary.js"></script>
 
 <?php wp_footer(); ?>
 </body>

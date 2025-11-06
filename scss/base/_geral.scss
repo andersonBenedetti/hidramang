@@ -43,3 +43,9 @@ ul {
 .title-section {
   @include title_section;
 }
+
+.subtitle {
+  @include subtitle;
+  color: $subtitle_color;
+  text-transform: uppercase;
+}

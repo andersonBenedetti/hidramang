@@ -128,3 +128,32 @@ $font-creato: "Creato Display", sans-serif;
   font-size: 0.875em;
   line-height: 24px;
 }
+
+@mixin subtitle {
+  font-family: $font-creato;
+  font-weight: 500;
+  font-size: 0.875em;
+  line-height: 1;
+  letter-spacing: 2px;
+}
+
+@mixin title_card {
+  font-family: $font-creato;
+  font-weight: 700;
+  font-size: 1.125em;
+  line-height: 1;
+}
+
+@mixin btn-card {
+  font-family: $font-creato;
+  font-weight: 800;
+  font-size: 0.938em;
+  line-height: 1;
+}
+
+@mixin title-card-popup {
+  font-family: $font-creato;
+  font-weight: 700;
+  font-size: 1.313em;
+  line-height: 29px;
+}

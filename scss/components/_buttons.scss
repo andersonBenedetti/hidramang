@@ -26,29 +26,19 @@
 
   &.secondary {
     border-color: $white;
-  }
-
-  &.product {
-    gap: 20px;
-    border-color: $white;
-
-    img {
-      width: 20px;
-      height: 20px;
-    }
-  }
-
-  &.laudo {
     background-color: $white;
-    border-color: $black;
-
-    img {
-      width: 12px;
-      height: 12px;
-    }
 
     span {
-      color: $black;
+      color: $blue_color;
+    }
+  }
+
+  &.tertiary {
+    border-color: $blue_color;
+    background-color: $blue_color;
+
+    span {
+      color: $white;
     }
   }
 }

@@ -5,5 +5,9 @@
     "sass": "sass --watch scss/style.scss:style.css",
     "watch": "browser-sync start --proxy http://hidramang.local/ --files 'style.css, **/*.php, **/*.js' --open --no-ui",
     "dev": "concurrently \"npm run sass\" \"npm run watch\""
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.4",
+    "concurrently": "^9.2.1"
   }
 }

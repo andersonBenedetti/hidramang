@@ -4,31 +4,27 @@ document.addEventListener("DOMContentLoaded", function () {
     slidesPerView: 1,
     spaceBetween: 0,
     speed: 800,
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-    },
   });
 
-  const catCarousel = new Swiper(".cat-carousel", {
+  const catCarousel = new Swiper(".carousel-infos", {
     loop: true,
     slidesPerView: 1.25,
-    spaceBetween: 10,
+    spaceBetween: 20,
     speed: 800,
     autoplay: {
       delay: 6000,
       disableOnInteraction: false,
     },
+    navigation: {
+      nextEl: ".carousel-infos .swiper-button-next",
+      prevEl: ".carousel-infos .swiper-button-prev",
+    },
     breakpoints: {
       768: {
-        slidesPerView: 1.5,
+        slidesPerView: 2.8,
       },
       1024: {
-        slidesPerView: 2.5,
+        slidesPerView: 3.8,
       },
     },
   });
